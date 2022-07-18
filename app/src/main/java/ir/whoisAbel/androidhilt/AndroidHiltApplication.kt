@@ -12,9 +12,7 @@ import dagger.hilt.android.HiltAndroidApp
 
    3. Do not forget to add this application class in AndroidManifest.xml,
     you need to update android:name in the AndroidManifest.xml
-
 */
-
 @HiltAndroidApp
 class AndroidHiltApplication : Application() {
 }
