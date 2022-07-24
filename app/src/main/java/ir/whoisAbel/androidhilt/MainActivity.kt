@@ -15,6 +15,7 @@ import dagger.hilt.android.components.ActivityComponent
 import dagger.hilt.android.scopes.ActivityScoped
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Inject
+import javax.inject.Qualifier
 import javax.inject.Singleton
 
 /*
@@ -63,7 +64,15 @@ class MainActivity : AppCompatActivity() {
 
         println(
             useSomeInterface
-                .getAThing() + ", identityHashCode is:" + System.identityHashCode(
+                .getAThing1() + ", identityHashCode is:" + System.identityHashCode(
+                someClassTwo
+            )
+                .toString()
+        )
+
+        println(
+            useSomeInterface
+                .getAThing2() + ", identityHashCode is:" + System.identityHashCode(
                 someClassTwo
             )
                 .toString()
@@ -110,20 +119,35 @@ interface SomeInterface {
     fun getAThing(): String
 }
 
-class SomeInterfaceImpl @Inject constructor(
+class SomeInterfaceImpl1 @Inject constructor(
     private val someString: String
 ) : SomeInterface {
     override fun getAThing(): String {
-        return someString
+        return "$someString Implementation 1"
     }
 }
 
+class SomeInterfaceImpl2 @Inject constructor(
+    private val someString: String
+) : SomeInterface {
+    override fun getAThing(): String {
+        return "$someString Implementation 2"
+    }
+}
+
+// Providing Instances of the Same Type with HILT
+
 class UseSomeInterface @Inject constructor(
-    private val someInterfaceImpl: SomeInterface,
+    @Impl1 private val someInterfaceImpl1: SomeInterface,
+    @Impl2 private val someInterfaceImpl2: SomeInterface,
     private val gson: Gson
 ) {
-    fun getAThing(): String {
-        return "Look I got: ${someInterfaceImpl.getAThing()}"
+    fun getAThing1(): String {
+        return "Look I got Impl1: ${someInterfaceImpl1.getAThing()}"
+    }
+
+    fun getAThing2(): String {
+        return "Look I got Impl2: ${someInterfaceImpl2.getAThing()}"
     }
 }
 
@@ -165,12 +189,22 @@ class MyModuleForProvides {
         return "A Thing"
     }
 
+    @Impl1
     @Singleton
     @Provides
-    fun provideSomeInterface(
+    fun provideSomeInterface1(
         someString: String
     ): SomeInterface {
-        return SomeInterfaceImpl(someString)
+        return SomeInterfaceImpl1(someString)
+    }
+
+    @Impl2
+    @Singleton
+    @Provides
+    fun provideSomeInterface2(
+        someString: String
+    ): SomeInterface {
+        return SomeInterfaceImpl2(someString)
     }
 
     @Singleton
@@ -180,3 +214,15 @@ class MyModuleForProvides {
     }
 
 }
+
+// ====================================================================================
+// Add this section for learn Providing Instances of the Same Type with HILT
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class Impl1
+
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class Impl2
