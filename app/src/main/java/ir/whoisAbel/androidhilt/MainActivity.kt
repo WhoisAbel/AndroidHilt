@@ -27,8 +27,12 @@ class MainActivity : AppCompatActivity() {
     @Inject
     lateinit var someClass: SomeClass
 
+    // Add this variable for learn @Scopes concepts
     @Inject
     lateinit var someClassTwo: SomeClass
+
+    @Inject
+    lateinit var useSomeInterface: UseSomeInterface
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -69,11 +73,35 @@ class SomeOtherClass @Inject constructor() {
     fun doSomeOtherThing(): String = "Look I did some other thing!"
 }
 
-
+// ====================================================================================
+// Add this section for learn @Scopes
 @AndroidEntryPoint
 class MyFragment : Fragment() {
 
     @Inject
     lateinit var someClass: SomeClass
 
+}
+
+// ====================================================================================
+// Add this section for learn Constructor Injection Problems
+// 1. Interface
+// 2. Third-Party library
+
+interface SomeInterface {
+    fun getAThing(): String
+}
+
+class SomeInterfaceImpl @Inject constructor() : SomeInterface {
+    override fun getAThing(): String {
+        return "A Thing"
+    }
+}
+
+class UseSomeInterface @Inject constructor(
+    private val someInterfaceImpl: SomeInterface
+) {
+    fun getAThing(): String {
+        return "Look I got: ${someInterfaceImpl.getAThing()}"
+    }
 }
