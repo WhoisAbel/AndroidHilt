@@ -1,5 +1,8 @@
 ### [Description]([CodingWithMitch.com](https://codingwithmitch.com/courses/hilt-dependency-injection/))
 
+Android HILT Tutorial on YouTube.
+
+https://codingwithmitch.com/courses/hilt-dependency-injection/
 ---
 
 #### **Course Objective:**
